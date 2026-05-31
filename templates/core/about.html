@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Tentang Kami{% endblock %}
+{% block meta_description %}Tentang EcoLens - Portal berita lingkungan hidup Indonesia{% endblock %}
+
+{% block content %}
+<section class="page-header" id="about-header">
+    <div class="container">
+        <h1 class="page-title animate-fade-in-up">🌿 Tentang EcoLens</h1>
+        <p class="page-subtitle animate-fade-in-up delay-1">Menginspirasi kepedulian lingkungan melalui informasi</p>
+    </div>
+</section>
+
+<section class="section about-section" id="about-content">
+    <div class="container">
+        <div class="about-grid">
+            <div class="about-main animate-on-scroll">
+                <h2>Siapa Kami?</h2>
+                <p>EcoLens adalah platform media informasi yang berfokus pada isu-isu lingkungan hidup di Indonesia dan dunia. Kami percaya bahwa perubahan besar dimulai dari kesadaran, dan kesadaran dimulai dari informasi yang tepat.</p>
+                <p>Melalui artikel-artikel edukatif, berita terkini, dan analisis mendalam, kami berkomitmen untuk menyajikan konten berkualitas yang menginspirasi aksi nyata dalam menjaga kelestarian lingkungan.</p>
+                
+                <h2>Misi Kami</h2>
+                <div class="mission-cards">
+                    <div class="mission-card">
+                        <div class="mission-icon">📰</div>
+                        <h3>Informasi Akurat</h3>
+                        <p>Menyajikan berita dan artikel lingkungan yang akurat, terpercaya, dan mudah dipahami oleh semua kalangan.</p>
+                    </div>
+                    <div class="mission-card">
+                        <div class="mission-icon">🎓</div>
+                        <h3>Edukasi Publik</h3>
+                        <p>Meningkatkan literasi lingkungan masyarakat melalui konten edukatif yang menarik dan interaktif.</p>
+                    </div>
+                    <div class="mission-card">
+                        <div class="mission-icon">🤝</div>
+                        <h3>Kolaborasi</h3>
+                        <p>Membangun jaringan kolaborasi dengan berbagai pihak untuk dampak lingkungan yang lebih besar.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="about-stats animate-on-scroll">
+                <div class="about-stat-card">
+                    <div class="stat-number">{{ stats.articles }}</div>
+                    <div class="stat-label">Artikel Terbit</div>
+                </div>
+                <div class="about-stat-card">
+                    <div class="stat-number">{{ stats.categories }}</div>
+                    <div class="stat-label">Kategori Topik</div>
+                </div>
+                <div class="about-stat-card">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Selalu Online</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

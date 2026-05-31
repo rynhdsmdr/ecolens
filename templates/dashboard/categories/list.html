@@ -1,0 +1,51 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Kelola Kategori{% endblock %}
+
+{% block dashboard_content %}
+<div class="page-header-dash">
+    <div>
+        <h1><i class="fas fa-tags"></i> Kelola Kategori</h1>
+        <p>Daftar semua kategori artikel</p>
+    </div>
+    <a href="{% url 'dashboard:category_create' %}" class="btn-dash btn-dash-primary" id="btn-add-category">
+        <i class="fas fa-plus"></i> Tambah Kategori
+    </a>
+</div>
+
+<div class="d-card">
+    <div class="d-card-body">
+        {% if categories %}
+        <div class="d-table-responsive">
+            <table class="d-table" id="categories-table">
+                <thead>
+                    <tr><th>Ikon</th><th>Nama</th><th>Slug</th><th>Jumlah Artikel</th><th>Aksi</th></tr>
+                </thead>
+                <tbody>
+                    {% for cat in categories %}
+                    <tr id="category-row-{{ cat.pk }}">
+                        <td class="category-icon-cell">{{ cat.icon }}</td>
+                        <td><strong>{{ cat.name }}</strong></td>
+                        <td><code>{{ cat.slug }}</code></td>
+                        <td>{{ cat.article_count }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'dashboard:category_edit' cat.pk %}" class="btn-action btn-action-edit" title="Edit"><i class="fas fa-edit"></i></a>
+                                <a href="{% url 'dashboard:category_delete' cat.pk %}" class="btn-action btn-action-delete" title="Hapus"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state-dash">
+            <i class="fas fa-tags"></i>
+            <h3>Belum Ada Kategori</h3>
+            <p>Buat kategori pertama untuk mengorganisir artikel</p>
+            <a href="{% url 'dashboard:category_create' %}" class="btn-dash btn-dash-primary">Tambah Kategori</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

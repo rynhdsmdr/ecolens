@@ -1,0 +1,113 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block dashboard_content %}
+<div class="page-header-dash">
+    <h1><i class="fas fa-chart-pie"></i> Dashboard</h1>
+    <p>Selamat datang kembali, {{ user.get_full_name|default:user.username }}!</p>
+</div>
+
+<!-- Stats Cards -->
+<div class="stats-cards" id="dashboard-stats">
+    <div class="d-stat-card d-stat-primary">
+        <div class="d-stat-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="d-stat-info">
+            <div class="d-stat-number">{{ total_articles }}</div>
+            <div class="d-stat-label">Total Artikel</div>
+        </div>
+    </div>
+    <div class="d-stat-card d-stat-success">
+        <div class="d-stat-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="d-stat-info">
+            <div class="d-stat-number">{{ published_articles }}</div>
+            <div class="d-stat-label">Terbit</div>
+        </div>
+    </div>
+    <div class="d-stat-card d-stat-warning">
+        <div class="d-stat-icon"><i class="fas fa-edit"></i></div>
+        <div class="d-stat-info">
+            <div class="d-stat-number">{{ draft_articles }}</div>
+            <div class="d-stat-label">Draft</div>
+        </div>
+    </div>
+    <div class="d-stat-card d-stat-info">
+        <div class="d-stat-icon"><i class="fas fa-tags"></i></div>
+        <div class="d-stat-info">
+            <div class="d-stat-number">{{ total_categories }}</div>
+            <div class="d-stat-label">Kategori</div>
+        </div>
+    </div>
+    <div class="d-stat-card d-stat-danger">
+        <div class="d-stat-icon"><i class="fas fa-envelope"></i></div>
+        <div class="d-stat-info">
+            <div class="d-stat-number">{{ unread_messages }}</div>
+            <div class="d-stat-label">Pesan Belum Dibaca</div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Content -->
+<div class="dashboard-grid">
+    <div class="d-card">
+        <div class="d-card-header">
+            <h3><i class="fas fa-clock"></i> Artikel Terbaru</h3>
+            <a href="{% url 'dashboard:article_list' %}" class="d-card-link">Lihat Semua</a>
+        </div>
+        <div class="d-card-body">
+            {% if recent_articles %}
+            <div class="d-table-responsive">
+                <table class="d-table">
+                    <thead><tr><th>Judul</th><th>Status</th><th>Tanggal</th></tr></thead>
+                    <tbody>
+                        {% for article in recent_articles %}
+                        <tr>
+                            <td><a href="{% url 'dashboard:article_edit' article.pk %}">{{ article.title|truncatewords:8 }}</a></td>
+                            <td><span class="badge badge-{{ article.status }}">{{ article.get_status_display }}</span></td>
+                            <td>{{ article.published_at|date:"d/m/Y" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">Belum ada artikel.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="d-card">
+        <div class="d-card-header">
+            <h3><i class="fas fa-envelope-open"></i> Pesan Belum Dibaca</h3>
+            <a href="{% url 'dashboard:message_list' %}" class="d-card-link">Lihat Semua</a>
+        </div>
+        <div class="d-card-body">
+            {% if recent_messages %}
+            <div class="message-list-mini">
+                {% for msg in recent_messages %}
+                <a href="{% url 'dashboard:message_detail' msg.pk %}" class="message-item-mini">
+                    <div class="message-sender">{{ msg.name }}</div>
+                    <div class="message-subject">{{ msg.subject }}</div>
+                    <div class="message-time">{{ msg.created_at|timesince }} lalu</div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted">Tidak ada pesan baru.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="d-card">
+    <div class="d-card-header"><h3><i class="fas fa-bolt"></i> Aksi Cepat</h3></div>
+    <div class="d-card-body">
+        <div class="quick-actions">
+            <a href="{% url 'dashboard:article_create' %}" class="quick-action-btn"><i class="fas fa-plus"></i> Tulis Artikel</a>
+            <a href="{% url 'dashboard:category_create' %}" class="quick-action-btn"><i class="fas fa-folder-plus"></i> Tambah Kategori</a>
+            <a href="{% url 'dashboard:message_list' %}" class="quick-action-btn"><i class="fas fa-inbox"></i> Cek Pesan</a>
+            <a href="{% url 'core:landing' %}" class="quick-action-btn" target="_blank"><i class="fas fa-globe"></i> Lihat Situs</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

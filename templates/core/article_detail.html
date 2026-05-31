@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ article.title }}{% endblock %}
+{% block meta_description %}{{ article.excerpt|truncatewords:30 }}{% endblock %}
+
+{% block content %}
+<section class="article-header" id="article-header">
+    <div class="container">
+        <div class="article-header-content animate-fade-in-up">
+            {% if article.category %}
+            <a href="{% url 'core:article_list' %}?category={{ article.category.slug }}" class="article-category-badge">
+                {{ article.category.icon }} {{ article.category.name }}
+            </a>
+            {% endif %}
+            <h1 class="article-title">{{ article.title }}</h1>
+            <div class="article-meta-row">
+                <span><i class="far fa-user"></i> {{ article.author }}</span>
+                <span><i class="far fa-calendar"></i> {{ article.published_at|date:"d F Y" }}</span>
+                <span><i class="far fa-eye"></i> {{ article.views_count }}x dibaca</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="article-content-section" id="article-content-section">
+    <div class="container">
+        <div class="article-layout">
+            <div class="article-main">
+                {% if article.image %}
+                <div class="article-featured-image animate-fade-in">
+                    <img src="{{ article.image.url }}" alt="{{ article.title }}">
+                </div>
+                {% endif %}
+                <div class="article-excerpt"><p>{{ article.excerpt }}</p></div>
+                <div class="article-body" id="article-body">{{ article.content|linebreaks }}</div>
+                <div class="article-share" id="article-share">
+                    <span class="share-label">Bagikan:</span>
+                    <div class="share-buttons">
+                        <a href="https://wa.me/?text={{ article.title }}" target="_blank" class="share-btn share-whatsapp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://twitter.com/intent/tweet?text={{ article.title }}" target="_blank" class="share-btn share-twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.facebook.com/sharer/sharer.php" target="_blank" class="share-btn share-facebook"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+            </div>
+            <aside class="article-sidebar" id="article-sidebar">
+                <div class="sidebar-card">
+                    <h4 class="sidebar-title">Penulis</h4>
+                    <div class="author-info">
+                        <div class="author-avatar"><i class="fas fa-user-circle"></i></div>
+                        <div><strong>{{ article.author }}</strong><p>Kontributor EcoLens</p></div>
+                    </div>
+                </div>
+                {% if article.category %}
+                <div class="sidebar-card">
+                    <h4 class="sidebar-title">Kategori</h4>
+                    <a href="{% url 'core:article_list' %}?category={{ article.category.slug }}" class="sidebar-category">{{ article.category.icon }} {{ article.category.name }}</a>
+                </div>
+                {% endif %}
+            </aside>
+        </div>
+    </div>
+</section>
+
+{% if related_articles %}
+<section class="section related-section" id="related-section">
+    <div class="container">
+        <div class="section-header"><h2 class="section-title">Artikel Terkait</h2></div>
+        <div class="articles-grid">
+            {% for rel in related_articles %}
+            <article class="article-card animate-on-scroll">
+                <div class="article-card-image">
+                    {% if rel.image %}<img src="{{ rel.image.url }}" alt="{{ rel.title }}" loading="lazy">
+                    {% else %}<div class="placeholder-image"><i class="fas fa-seedling"></i></div>{% endif %}
+                </div>
+                <div class="article-card-body">
+                    <div class="card-meta"><span><i class="far fa-calendar"></i> {{ rel.published_at|date:"d M Y" }}</span></div>
+                    <h3 class="card-title"><a href="{% url 'core:article_detail' rel.slug %}">{{ rel.title }}</a></h3>
+                    <p class="card-excerpt">{{ rel.excerpt|truncatewords:15 }}</p>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

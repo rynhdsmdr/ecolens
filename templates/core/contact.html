@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Kontak{% endblock %}
+{% block meta_description %}Hubungi EcoLens - kirim pesan, saran, atau pertanyaan{% endblock %}
+
+{% block content %}
+<section class="page-header" id="contact-header">
+    <div class="container">
+        <h1 class="page-title animate-fade-in-up">📩 Hubungi Kami</h1>
+        <p class="page-subtitle animate-fade-in-up delay-1">Kami senang mendengar dari Anda</p>
+    </div>
+</section>
+
+<section class="section contact-section" id="contact-content">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-form-wrapper animate-on-scroll">
+                <h2>Kirim Pesan</h2>
+                <p>Isi formulir di bawah ini dan kami akan segera merespons pesan Anda.</p>
+                <form method="POST" class="contact-form" id="contact-form">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div class="form-error">{{ field.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-lg" id="contact-submit">
+                        <i class="fas fa-paper-plane"></i> Kirim Pesan
+                    </button>
+                </form>
+            </div>
+            <div class="contact-info animate-on-scroll">
+                <div class="contact-info-card">
+                    <div class="contact-info-icon"><i class="fas fa-envelope"></i></div>
+                    <h3>Email</h3>
+                    <p>info@ecolens.id</p>
+                </div>
+                <div class="contact-info-card">
+                    <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <h3>Lokasi</h3>
+                    <p>Jakarta, Indonesia</p>
+                </div>
+                <div class="contact-info-card">
+                    <div class="contact-info-icon"><i class="fas fa-clock"></i></div>
+                    <h3>Jam Operasional</h3>
+                    <p>Senin - Jumat, 09:00 - 17:00 WIB</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

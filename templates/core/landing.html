@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Beranda{% endblock %}
+{% block meta_description %}EcoLens - Portal berita dan informasi lingkungan hidup terkini di Indonesia{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" id="hero-section">
+    <div class="hero-bg"></div>
+    <div class="container hero-content">
+        <div class="hero-badge animate-fade-in">
+            <span>🌍 Portal Lingkungan Hidup</span>
+        </div>
+        <h1 class="hero-title animate-fade-in-up">
+            Jaga Bumi Kita<br>
+            <span class="text-gradient">Mulai Dari Informasi</span>
+        </h1>
+        <p class="hero-subtitle animate-fade-in-up delay-1">
+            Dapatkan berita terkini, artikel edukatif, dan wawasan mendalam 
+            tentang lingkungan hidup Indonesia dan dunia.
+        </p>
+        <div class="hero-actions animate-fade-in-up delay-2">
+            <a href="{% url 'core:article_list' %}" class="btn btn-primary btn-lg" id="hero-cta-articles">
+                <i class="fas fa-newspaper"></i> Jelajahi Artikel
+            </a>
+            <a href="{% url 'core:about' %}" class="btn btn-outline btn-lg" id="hero-cta-about">
+                Tentang Kami <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="hero-scroll-indicator">
+        <div class="scroll-line"></div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section" id="stats-section">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card animate-on-scroll">
+                <div class="stat-icon">📰</div>
+                <div class="stat-number" data-count="{{ stats.articles }}">{{ stats.articles }}</div>
+                <div class="stat-label">Artikel Terbit</div>
+            </div>
+            <div class="stat-card animate-on-scroll">
+                <div class="stat-icon">📂</div>
+                <div class="stat-number" data-count="{{ stats.categories }}">{{ stats.categories }}</div>
+                <div class="stat-label">Kategori</div>
+            </div>
+            <div class="stat-card animate-on-scroll">
+                <div class="stat-icon">👁️</div>
+                <div class="stat-number" data-count="{{ stats.total_views }}">{{ stats.total_views }}</div>
+                <div class="stat-label">Total Pembaca</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Articles -->
+{% if featured_articles %}
+<section class="section featured-section" id="featured-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">⭐ Pilihan Editor</span>
+            <h2 class="section-title">Artikel Unggulan</h2>
+            <p class="section-subtitle">Bacaan terpilih yang wajib Anda simak</p>
+        </div>
+        <div class="featured-grid">
+            {% for article in featured_articles %}
+            <article class="featured-card animate-on-scroll" id="featured-article-{{ article.pk }}">
+                <div class="featured-image">
+                    {% if article.image %}
+                    <img src="{{ article.image.url }}" alt="{{ article.title }}" loading="lazy">
+                    {% else %}
+                    <div class="placeholder-image">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    {% endif %}
+                    {% if article.category %}
+                    <span class="card-category">{{ article.category.icon }} {{ article.category.name }}</span>
+                    {% endif %}
+                </div>
+                <div class="featured-body">
+                    <div class="card-meta">
+                        <span><i class="far fa-calendar"></i> {{ article.published_at|date:"d M Y" }}</span>
+                        <span><i class="far fa-eye"></i> {{ article.views_count }}x</span>
+                    </div>
+                    <h3 class="card-title">
+                        <a href="{% url 'core:article_detail' article.slug %}">{{ article.title }}</a>
+                    </h3>
+                    <p class="card-excerpt">{{ article.excerpt|truncatewords:25 }}</p>
+                    <a href="{% url 'core:article_detail' article.slug %}" class="card-link">
+                        Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Latest Articles -->
+{% if latest_articles %}
+<section class="section latest-section" id="latest-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">🕐 Terbaru</span>
+            <h2 class="section-title">Artikel Terkini</h2>
+            <p class="section-subtitle">Update terbaru seputar lingkungan hidup</p>
+        </div>
+        <div class="articles-grid">
+            {% for article in latest_articles %}
+            <article class="article-card animate-on-scroll" id="latest-article-{{ article.pk }}">
+                <div class="article-card-image">
+                    {% if article.image %}
+                    <img src="{{ article.image.url }}" alt="{{ article.title }}" loading="lazy">
+                    {% else %}
+                    <div class="placeholder-image">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    {% endif %}
+                    {% if article.category %}
+                    <span class="card-category">{{ article.category.icon }} {{ article.category.name }}</span>
+                    {% endif %}
+                </div>
+                <div class="article-card-body">
+                    <div class="card-meta">
+                        <span><i class="far fa-calendar"></i> {{ article.published_at|date:"d M Y" }}</span>
+                    </div>
+                    <h3 class="card-title">
+                        <a href="{% url 'core:article_detail' article.slug %}">{{ article.title }}</a>
+                    </h3>
+                    <p class="card-excerpt">{{ article.excerpt|truncatewords:18 }}</p>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        <div class="section-footer">
+            <a href="{% url 'core:article_list' %}" class="btn btn-primary" id="btn-view-all-articles">
+                Lihat Semua Artikel <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Categories Section -->
+{% if categories %}
+<section class="section categories-section" id="categories-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">📂 Topik</span>
+            <h2 class="section-title">Jelajahi Kategori</h2>
+            <p class="section-subtitle">Temukan artikel sesuai minat Anda</p>
+        </div>
+        <div class="categories-grid">
+            {% for cat in categories %}
+            <a href="{{ cat.get_absolute_url }}" class="category-card animate-on-scroll" id="category-card-{{ cat.pk }}">
+                <div class="category-icon">{{ cat.icon }}</div>
+                <h3 class="category-name">{{ cat.name }}</h3>
+                <p class="category-count">{{ cat.article_count }} artikel</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="cta-section" id="cta-section">
+    <div class="container">
+        <div class="cta-content animate-on-scroll">
+            <h2>Ada Pertanyaan atau Saran?</h2>
+            <p>Kami senang mendengar dari Anda. Hubungi kami untuk kolaborasi, saran artikel, atau pertanyaan apapun.</p>
+            <a href="{% url 'core:contact' %}" class="btn btn-primary btn-lg" id="cta-contact">
+                <i class="fas fa-envelope"></i> Hubungi Kami
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

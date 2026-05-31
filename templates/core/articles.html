@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Artikel{% if active_category %} - {{ active_category.name }}{% endif %}{% endblock %}
+{% block meta_description %}Kumpulan artikel dan berita lingkungan hidup terkini{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header" id="articles-header">
+    <div class="container">
+        <h1 class="page-title animate-fade-in-up">
+            {% if active_category %}
+            {{ active_category.icon }} {{ active_category.name }}
+            {% elif query %}
+            Pencarian: "{{ query }}"
+            {% else %}
+            📰 Semua Artikel
+            {% endif %}
+        </h1>
+        <p class="page-subtitle animate-fade-in-up delay-1">
+            {% if active_category %}
+            Artikel dalam kategori {{ active_category.name }}
+            {% elif query %}
+            Menampilkan hasil pencarian untuk "{{ query }}"
+            {% else %}
+            Jelajahi artikel dan berita lingkungan hidup terkini
+            {% endif %}
+        </p>
+    </div>
+</section>
+
+<!-- Filters -->
+<section class="filters-section" id="filters-section">
+    <div class="container">
+        <div class="filters-bar">
+            <!-- Search -->
+            <form class="search-form" method="GET" action="{% url 'core:article_list' %}" id="search-form">
+                <div class="search-input-group">
+                    <i class="fas fa-search"></i>
+                    <input type="text" name="q" value="{{ query }}" placeholder="Cari artikel..." class="search-input" id="search-input">
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm" id="search-submit">Cari</button>
+            </form>
+
+            <!-- Category Filter -->
+            <div class="category-filters" id="category-filters">
+                <a href="{% url 'core:article_list' %}" class="filter-chip {% if not active_category %}active{% endif %}">Semua</a>
+                {% for cat in categories %}
+                <a href="{% url 'core:article_list' %}?category={{ cat.slug }}" 
+                   class="filter-chip {% if active_category and active_category.pk == cat.pk %}active{% endif %}"
+                   id="filter-{{ cat.slug }}">
+                    {{ cat.icon }} {{ cat.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Articles Grid -->
+<section class="section" id="articles-grid-section">
+    <div class="container">
+        {% if page_obj %}
+        <div class="articles-grid">
+            {% for article in page_obj %}
+            <article class="article-card animate-on-scroll" id="article-card-{{ article.pk }}">
+                <div class="article-card-image">
+                    {% if article.image %}
+                    <img src="{{ article.image.url }}" alt="{{ article.title }}" loading="lazy">
+                    {% else %}
+                    <div class="placeholder-image">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    {% endif %}
+                    {% if article.category %}
+                    <span class="card-category">{{ article.category.icon }} {{ article.category.name }}</span>
+                    {% endif %}
+                </div>
+                <div class="article-card-body">
+                    <div class="card-meta">
+                        <span><i class="far fa-calendar"></i> {{ article.published_at|date:"d M Y" }}</span>
+                        <span><i class="far fa-eye"></i> {{ article.views_count }}x</span>
+                    </div>
+                    <h3 class="card-title">
+                        <a href="{% url 'core:article_detail' article.slug %}">{{ article.title }}</a>
+                    </h3>
+                    <p class="card-excerpt">{{ article.excerpt|truncatewords:20 }}</p>
+                    <a href="{% url 'core:article_detail' article.slug %}" class="card-link">
+                        Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <nav class="pagination" id="pagination" aria-label="Navigasi halaman">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if active_category %}&category={{ active_category.slug }}{% endif %}{% if query %}&q={{ query }}{% endif %}" 
+               class="page-btn" id="page-prev">
+                <i class="fas fa-chevron-left"></i> Sebelumnya
+            </a>
+            {% endif %}
+
+            <div class="page-numbers">
+                {% for num in page_obj.paginator.page_range %}
+                <a href="?page={{ num }}{% if active_category %}&category={{ active_category.slug }}{% endif %}{% if query %}&q={{ query }}{% endif %}" 
+                   class="page-num {% if page_obj.number == num %}active{% endif %}"
+                   id="page-{{ num }}">{{ num }}</a>
+                {% endfor %}
+            </div>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if active_category %}&category={{ active_category.slug }}{% endif %}{% if query %}&q={{ query }}{% endif %}" 
+               class="page-btn" id="page-next">
+                Selanjutnya <i class="fas fa-chevron-right"></i>
+            </a>
+            {% endif %}
+        </nav>
+        {% endif %}
+
+        {% else %}
+        <div class="empty-state" id="no-articles">
+            <div class="empty-icon">📭</div>
+            <h3>Belum Ada Artikel</h3>
+            <p>{% if query %}Tidak ditemukan artikel dengan kata kunci "{{ query }}"{% else %}Belum ada artikel yang dipublikasikan{% endif %}</p>
+            {% if query or active_category %}
+            <a href="{% url 'core:article_list' %}" class="btn btn-primary">Lihat Semua Artikel</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

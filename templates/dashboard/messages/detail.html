@@ -1,0 +1,42 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Detail Pesan{% endblock %}
+
+{% block dashboard_content %}
+<div class="page-header-dash">
+    <div>
+        <h1><i class="fas fa-envelope-open"></i> Detail Pesan</h1>
+    </div>
+    <a href="{% url 'dashboard:message_list' %}" class="btn-dash btn-dash-secondary">
+        <i class="fas fa-arrow-left"></i> Kembali
+    </a>
+</div>
+
+<div class="d-card">
+    <div class="d-card-body">
+        <div class="message-detail">
+            <div class="message-detail-header">
+                <h2>{{ msg.subject }}</h2>
+                <span class="badge {% if msg.is_read %}badge-read{% else %}badge-unread{% endif %}">
+                    {% if msg.is_read %}Sudah Dibaca{% else %}Baru{% endif %}
+                </span>
+            </div>
+            <div class="message-detail-meta">
+                <div class="meta-item"><i class="fas fa-user"></i> <strong>{{ msg.name }}</strong></div>
+                <div class="meta-item"><i class="fas fa-envelope"></i> <a href="mailto:{{ msg.email }}">{{ msg.email }}</a></div>
+                <div class="meta-item"><i class="fas fa-clock"></i> {{ msg.created_at|date:"d F Y, H:i" }} WIB</div>
+            </div>
+            <div class="message-detail-body">
+                <p>{{ msg.message|linebreaks }}</p>
+            </div>
+            <div class="message-detail-actions">
+                <a href="mailto:{{ msg.email }}?subject=Re: {{ msg.subject }}" class="btn-dash btn-dash-primary">
+                    <i class="fas fa-reply"></i> Balas via Email
+                </a>
+                <a href="{% url 'dashboard:message_delete' msg.pk %}" class="btn-dash btn-dash-danger">
+                    <i class="fas fa-trash"></i> Hapus
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}EcoLens - Portal Berita & Informasi Lingkungan Hidup Indonesia{% endblock %}">
+    <title>{% block title %}EcoLens{% endblock %} | Portal Lingkungan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="main-navbar">
+        <div class="container nav-container">
+            <a href="{% url 'core:landing' %}" class="nav-logo" id="nav-logo">
+                <span class="logo-icon">🌿</span>
+                <span class="logo-text">EcoLens</span>
+            </a>
+
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                <span class="hamburger"></span>
+            </button>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="{% url 'core:landing' %}" class="nav-link {% if request.resolver_match.url_name == 'landing' %}active{% endif %}" id="nav-home">Beranda</a></li>
+                <li><a href="{% url 'core:article_list' %}" class="nav-link {% if request.resolver_match.url_name == 'article_list' or request.resolver_match.url_name == 'article_detail' %}active{% endif %}" id="nav-articles">Artikel</a></li>
+                <li><a href="{% url 'core:about' %}" class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" id="nav-about">Tentang</a></li>
+                <li><a href="{% url 'core:contact' %}" class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" id="nav-contact">Kontak</a></li>
+                {% if user.is_staff %}
+                <li><a href="{% url 'dashboard:home' %}" class="nav-link nav-link-cta" id="nav-dashboard">Dashboard</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% if messages %}
+    <div class="flash-messages" id="flash-messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" id="alert-{{ forloop.counter }}">
+            <span>{{ message }}</span>
+            <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="footer-logo">
+                        <span class="logo-icon">🌿</span>
+                        <span class="logo-text">EcoLens</span>
+                    </div>
+                    <p>Portal berita dan informasi lingkungan hidup Indonesia. Bersama menjaga bumi untuk generasi mendatang.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Navigasi</h4>
+                    <ul>
+                        <li><a href="{% url 'core:landing' %}">Beranda</a></li>
+                        <li><a href="{% url 'core:article_list' %}">Artikel</a></li>
+                        <li><a href="{% url 'core:about' %}">Tentang</a></li>
+                        <li><a href="{% url 'core:contact' %}">Kontak</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Kategori</h4>
+                    <ul>
+                        <li><a href="{% url 'core:article_list' %}">Semua Artikel</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Hubungi Kami</h4>
+                    <p><i class="fas fa-envelope"></i> info@ecolens.id</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Jakarta, Indonesia</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 EcoLens. Semua hak dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
